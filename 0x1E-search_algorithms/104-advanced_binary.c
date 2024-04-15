@@ -1,68 +1,59 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*
+ * File: 104-advanced_binary.c
+ * Auth: Brennan D Baraban
+ */
+
 #include "search_algos.h"
 
-int advanced_recur(int *array, int low, int high, int value);
 /**
- * advanced_binary - function that searches for a value in a
- * sorted array of integers
- * @array: pointer to the first element
- * @size: number of elements
- * @value: value to search
- * Return: void
- */
+  * advanced_binary_recursive - Searches recursively for a value in a sorted
+  *                             array of integers using binary search.
+  * @array: A pointer to the first element of the [sub]array to search.
+  * @left: The starting index of the [sub]array to search.
+  * @right: The ending index of the [sub]array to search.
+  * @value: The value to search for.
+  *
+  * Return: If the value is not present, -1.
+  *         Otherwise, the index where the value is located.
+  *
+  * Description: Prints the [sub]array being searched after each change.
+  */
+int advanced_binary_recursive(int *array, size_t left, size_t right, int value)
+{
+	size_t i;
 
+	if (right < left)
+		return (-1);
+
+	printf("Searching in array: ");
+	for (i = left; i < right; i++)
+		printf("%d, ", array[i]);
+	printf("%d\n", array[i]);
+
+	i = left + (right - left) / 2;
+	if (array[i] == value && (i == left || array[i - 1] != value))
+		return (i);
+	if (array[i] >= value)
+		return (advanced_binary_recursive(array, left, i, value));
+	return (advanced_binary_recursive(array, i + 1, right, value));
+}
+
+/**
+  * advanced_binary - Searches for a value in a sorted array
+  *                   of integers using advanced binary search.
+  * @array: A pointer to the first element of the array to search.
+  * @size: The number of elements in the array.
+  * @value: The value to search for.
+  *
+  * Return: If the value is not present or the array is NULL, -1.
+  *         Otherwise, the first index where the value is located.
+  *
+  * Description: Prints the [sub]array being searched after each change.
+  */
 int advanced_binary(int *array, size_t size, int value)
 {
-if (array == NULL || size == 0)
-{
-return (-1);
-}
-return (advanced_recur(array, 0, size - 1, value));
-}
-/**
- * advanced_recur - function that searches recursively
- * @array: array of integers
- * @low: integer
- * @high: integer
- * @value: integer
- * Return: void
- */
-int advanced_recur(int *array, int low, int high, int value)
-{
-int a, x;
-if (low > high)
-{
-return (-1);
-}
-printf("Searching in array: ");
-for (x = low; x <= high; x++)
-{
-if (x != low)
-{
-printf(", ");
-}
-printf("%d", array[x]);
-}
-printf("\n");
-a = low + (high - low) / 2;
-if (array[a] == value)
-{
-if (a == low || array[a - 1] != value)
-{
-return (a);
-}
-else
-{
-return (advanced_recur(array, low, a, value));
-}
-}
-if (array[a] < value)
-{
-return (advanced_recur(array, a + 1, high, value));
-}
-else
-{
-return (advanced_recur(array, low, a - 1, value));
-}
+	if (array == NULL || size == 0)
+		return (-1);
+
+	return (advanced_binary_recursive(array, 0, size - 1, value));
 }
